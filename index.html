@@ -4,16 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Dream Ladders AI</title>
+
 <style>
-body{
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
 font-family:Arial,sans-serif;
 background:linear-gradient(135deg,#0f172a,#1e293b);
 color:white;
+min-height:100vh;
 }
 
 .app{
-max-width:700px;
+max-width:750px;
 margin:auto;
 padding:20px;
 }
@@ -24,22 +31,23 @@ margin-bottom:20px;
 }
 
 header h1{
-margin:0;
 font-size:34px;
+margin-bottom:8px;
 }
 
 header p{
-opacity:0.8;
+opacity:.8;
+font-size:15px;
 }
 
 #chatbox{
 background:white;
 color:#111;
-height:500px;
+height:520px;
 overflow-y:auto;
-border-radius:20px;
+border-radius:18px;
 padding:15px;
-box-shadow:0 10px 30px rgba(0,0,0,0.3);
+box-shadow:0 10px 30px rgba(0,0,0,.25);
 }
 
 .bot,.user{
@@ -47,6 +55,7 @@ padding:12px;
 margin:10px 0;
 border-radius:12px;
 white-space:pre-line;
+line-height:1.5;
 }
 
 .bot{
@@ -67,9 +76,10 @@ margin-top:15px;
 input{
 flex:1;
 padding:14px;
+font-size:16px;
 border:none;
 border-radius:12px;
-font-size:16px;
+outline:none;
 }
 
 button{
@@ -78,20 +88,7 @@ border:none;
 border-radius:12px;
 cursor:pointer;
 font-weight:bold;
--webkit-appearance:none;
-appearance:none;
-}
-
-.lang-box{
-margin-top:15px;
-display:flex;
-gap:10px;
-justify-content:center;
-}
-
-.lang-box button{
-background:white;
-color:#111;
+font-size:15px;
 }
 
 .send-btn{
@@ -99,13 +96,39 @@ background:#22c55e;
 color:white;
 }
 
+.lang-box{
+display:flex;
+gap:10px;
+justify-content:center;
+margin-top:15px;
+}
+
+.lang-box button{
+background:white;
+color:#111;
+}
+
+.reset-btn{
+background:#ef4444;
+color:white;
+margin-top:15px;
+width:100%;
+}
+
 a{
-color:#0ea5e9;
+color:#0284c7;
 font-weight:bold;
 text-decoration:none;
 }
+
+small{
+display:block;
+margin-top:8px;
+opacity:.7;
+}
 </style>
 </head>
+
 <body>
 
 <div class="app">
@@ -119,39 +142,43 @@ text-decoration:none;
 
 <div class="input-area">
 <input type="text" id="userInput" placeholder="Type here">
-<button type="button" class="send-btn" id="sendBtn">Send</button>
+<button class="send-btn" id="sendBtn">Send</button>
 </div>
 
 <div class="lang-box">
-<button type="button" id="btnEn">English</button>
-<button type="button" id="btnTe">తెలుగు</button>
+<button id="btnEn">English</button>
+<button id="btnTe">తెలుగు</button>
 </div>
+
+<button class="reset-btn" id="resetBtn">Restart Chat</button>
 
 </div>
 
 <script>
-let lang = "en";
-let step = 0;
-let data = {};
-let phone = "917093218658";
 
-const chatbox = document.getElementById("chatbox");
-const input = document.getElementById("userInput");
+let lang="en";
+let step=0;
+let data={};
+let phone="917093218658";
 
-const q = {
+const chatbox=document.getElementById("chatbox");
+const input=document.getElementById("userInput");
+
+const q={
 en:[
 "Welcome to Dream Ladders AI House Cost Estimator 👷\nGet an instant estimate for your dream home construction.\n\nWhich city are you building in?",
-"What is built-up area in sq ft?",
-"How many floors?",
-"Material type? standard / premium",
-"Need interior also? yes / no"
+"What is built-up area in sq ft?\nExample: 1000",
+"How many floors?\nExample: 1 / 2 / 3",
+"Material type?\nstandard / premium",
+"Need interior also?\nyes / no"
 ],
+
 te:[
-"Dream Ladders AI House Cost Estimator కు స్వాగతం 👷\nమీ కలల ఇంటి నిర్మాణ ఖర్చు అంచనాను వెంటనే తెలుసుకోండి.\n\nమీరు ఏ నగరంలో నిర్మిస్తున్నారు?",
-"ఇంటి విస్తీర్ణం ఎంత sq ft?",
-"ఎన్ని అంతస్తులు?",
-"మెటీరియల్ టైప్? standard / premium",
-"ఇంటీరియర్ కూడా కావాలా? yes / no"
+"Dream Ladders AI House Cost Estimator కు స్వాగతం 👷\nమీ ఇంటి నిర్మాణ ఖర్చును వెంటనే తెలుసుకోండి.\n\nమీరు ఏ నగరంలో నిర్మిస్తున్నారు?",
+"ఇంటి built-up area ఎంత sq ft?\nఉదాహరణ: 1000",
+"ఎన్ని అంతస్తులు?\nఉదాహరణ: 1 / 2 / 3",
+"మెటీరియల్ టైప్?\nstandard / premium",
+"ఇంటీరియర్ కూడా కావాలా?\nyes / no"
 ]
 };
 
@@ -175,13 +202,21 @@ function ask(){
 add(q[lang][step],"bot");
 }
 
-function setLang(l){
-lang=l;
+function resetChat(){
 step=0;
 data={};
 chatbox.innerHTML="";
 input.value="";
 ask();
+}
+
+function setLang(l){
+lang=l;
+resetChat();
+}
+
+function isNumber(v){
+return !isNaN(v) && v.trim()!=="";
 }
 
 function nextStep(){
@@ -192,40 +227,116 @@ if(!val) return;
 
 add(val,"user");
 
-if(step===0) data.city=val;
-if(step===1) data.area=parseFloat(val);
-if(step===2) data.floors=parseInt(val);
-if(step===3) data.material=val.toLowerCase();
-if(step===4) data.interior=val.toLowerCase();
+if(step===0){
+
+if(isNumber(val)){
+add(lang==="en"
+?`You entered "${val}". I am asking city name.\nExample: Hyderabad / Nizamabad`
+:`మీరు "${val}" ఇచ్చారు. నేను నగరం పేరు అడిగాను.\nఉదాహరణ: Hyderabad / Nizamabad`
+,"bot");
+input.value="";
+return;
+}
+
+data.city=val;
+}
+
+else if(step===1){
+
+if(!isNumber(val) || Number(val)<=0){
+add(lang==="en"
+?`You entered "${val}". I am asking built-up area in sq ft.\nExample: 1000`
+:`మీరు "${val}" ఇచ్చారు. నేను sq ft area అడిగాను.\nఉదాహరణ: 1000`
+,"bot");
+input.value="";
+return;
+}
+
+data.area=parseFloat(val);
+}
+
+else if(step===2){
+
+if(!isNumber(val) || Number(val)<=0){
+add(lang==="en"
+?`You entered "${val}". I am asking number of floors.\nExample: 1 / 2 / 3`
+:`మీరు "${val}" ఇచ్చారు. నేను floors అడిగాను.\nఉదాహరణ: 1 / 2 / 3`
+,"bot");
+input.value="";
+return;
+}
+
+data.floors=parseInt(val);
+}
+
+else if(step===3){
+
+val=val.toLowerCase();
+
+if(val!=="standard" && val!=="premium"){
+add(lang==="en"
+?`You entered "${val}". Please type:\nstandard OR premium`
+:`మీరు "${val}" ఇచ్చారు.\nstandard లేదా premium టైప్ చేయండి`
+,"bot");
+input.value="";
+return;
+}
+
+data.material=val;
+}
+
+else if(step===4){
+
+val=val.toLowerCase();
+
+if(val!=="yes" && val!=="no"){
+add(lang==="en"
+?`You entered "${val}". Please type:\nyes OR no`
+:`మీరు "${val}" ఇచ్చారు.\nyes లేదా no టైప్ చేయండి`
+,"bot");
+input.value="";
+return;
+}
+
+data.interior=val;
+}
 
 input.value="";
 step++;
 
-if(step < q[lang].length){
+if(step<q[lang].length){
 ask();
 }else{
 result();
 }
+
 }
 
 function result(){
 
-let rate = 1900;
+let rate=1900;
 
 if(data.city.toLowerCase().includes("hyderabad")) rate=2200;
-if(data.material==="premium") rate += 400;
+if(data.city.toLowerCase().includes("nizamabad")) rate=1850;
 
-let totalArea = data.area * data.floors;
-let total = totalArea * rate;
+if(data.material==="premium") rate+=400;
 
-if(data.interior==="yes") total += totalArea * 350;
+let totalArea=data.area*data.floors;
+let total=totalArea*rate;
 
-let cement = Math.round(totalArea * 0.45);
-let steel = Math.round(totalArea * 4);
+if(data.interior==="yes"){
+total+=totalArea*450;
+}
+
+let cement=Math.round(totalArea*0.45);
+let steel=Math.round(totalArea*4.2);
+let sand=(totalArea*0.018).toFixed(1);
+let agg=(totalArea*0.025).toFixed(1);
 
 if(lang==="en"){
+
 add(
-`🏠 Total Area: ${totalArea} sq ft
+`🏠 Total Built-up Area: ${totalArea} sq ft
 
 💰 Estimated Cost: ₹${total.toLocaleString("en-IN")}
 
@@ -233,9 +344,18 @@ add(
 
 🔩 Steel: ${steel} kg
 
+🏖 Sand: ${sand} m³
+
+🪨 Aggregate: ${agg} m³
+
+⚠ Preliminary estimate only.
+Final cost depends on design, soil, market rates & drawings.
+
 📞 Click below for detailed quote`,
 "bot");
+
 }else{
+
 add(
 `🏠 మొత్తం విస్తీర్ణం: ${totalArea} sq ft
 
@@ -245,24 +365,45 @@ add(
 
 🔩 స్టీల్: ${steel} kg
 
+🏖 ఇసుక: ${sand} m³
+
+🪨 మెటల్: ${agg} m³
+
+⚠ ఇది ప్రాథమిక అంచనా మాత్రమే.
+ఫైనల్ ఖర్చు డిజైన్, soil, మార్కెట్ రేట్లపై ఆధారపడుతుంది.
+
 📞 వివరమైన కోట్ కోసం కింద క్లిక్ చేయండి`,
 "bot");
+
 }
 
-let msg = encodeURIComponent("Hello Dream Ladders, I need detailed estimate for " + totalArea + " sq ft in " + data.city);
+let msg=encodeURIComponent(
+"Hello Dream Ladders, I need detailed estimate.\nCity: "+data.city+
+"\nArea: "+data.area+
+"\nFloors: "+data.floors+
+"\nMaterial: "+data.material+
+"\nInterior: "+data.interior+
+"\nTotal Area: "+totalArea+" sq ft"
+);
 
-addHtml('<a href="https://wa.me/'+phone+'?text='+msg+'" target="_blank">📱 Contact on WhatsApp</a>');
+addHtml('<a target="_blank" href="https://wa.me/'+phone+'?text='+msg+'">📱 Contact on WhatsApp</a>');
+
+step=0;
+
 }
 
-document.getElementById("btnEn").addEventListener("click",function(){setLang("en");});
-document.getElementById("btnTe").addEventListener("click",function(){setLang("te");});
 document.getElementById("sendBtn").addEventListener("click",nextStep);
 
 input.addEventListener("keydown",function(e){
 if(e.key==="Enter") nextStep();
 });
 
-setLang("en");
+document.getElementById("btnEn").addEventListener("click",()=>setLang("en"));
+document.getElementById("btnTe").addEventListener("click",()=>setLang("te"));
+document.getElementById("resetBtn").addEventListener("click",resetChat);
+
+resetChat();
+
 </script>
 
 </body>
