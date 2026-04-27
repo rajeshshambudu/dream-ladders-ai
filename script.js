@@ -6,14 +6,17 @@ const chatbox = document.getElementById("chatbox");
 
 const q = {
 en:[
-"Welcome 👷 What is your city?",
+"Welcome to Dream Ladders AI House Cost Estimator 👷
+Get an instant estimate for your dream home construction.
+Which city are you building in?",
 "What is built-up area in sq ft?",
 "How many floors?",
 "Material type? standard / premium",
 "Need interior also? yes / no"
 ],
 te:[
-"స్వాగతం 👷 మీ నగరం ఏది?",
+"Dream Ladders AI House Cost Estimator కు స్వాగతం 👷
+మీ కలల ఇంటి నిర్మాణ ఖర్చు అంచనాను వెంటనే తెలుసుకోండి.",
 "ఇంటి విస్తీర్ణం ఎంత sq ft?",
 "ఎన్ని అంతస్తులు?",
 "మెటీరియల్ టైప్? standard / premium",
@@ -92,7 +95,7 @@ add(
 📞 Click below for detailed quote`,
 "bot");
 
-let phone="919999999999";
+let phone="7093218658";
 let msg=`Hello Dream Ladders, I need detailed estimate for ${totalArea} sq ft in ${data.city}`;
 window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,"_blank");
 }
