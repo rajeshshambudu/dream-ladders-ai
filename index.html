@@ -2,95 +2,50 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0f172a">
-<title>Dream Ladders AI House Cost Estimator</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Dream Ladders AI</title>
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
 body{
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+margin:0;
+font-family:Arial,sans-serif;
 background:linear-gradient(135deg,#0f172a,#1e293b);
-min-height:100vh;
-padding:15px;
-color:#fff;
+color:white;
 }
 
 .app{
 max-width:700px;
 margin:auto;
+padding:20px;
 }
 
-.card{
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(10px);
-border-radius:22px;
-padding:18px;
-box-shadow:0 15px 40px rgba(0,0,0,0.25);
-}
-
-h1{
-font-size:28px;
+header{
 text-align:center;
-margin-bottom:8px;
+margin-bottom:20px;
 }
 
-.sub{
-text-align:center;
-opacity:.85;
-font-size:14px;
-margin-bottom:18px;
+header h1{
+margin:0;
+font-size:34px;
 }
 
-.lang-box{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-margin-bottom:15px;
-}
-
-button{
-border:none;
-border-radius:14px;
-padding:14px;
-font-size:16px;
-font-weight:700;
-cursor:pointer;
--webkit-appearance:none;
-appearance:none;
-touch-action:manipulation;
-}
-
-.lang-btn{
-background:#fff;
-color:#111;
-}
-
-.primary{
-background:#22c55e;
-color:#fff;
+header p{
+opacity:0.8;
 }
 
 #chatbox{
-background:#fff;
+background:white;
 color:#111;
-height:420px;
+height:500px;
 overflow-y:auto;
-border-radius:18px;
+border-radius:20px;
 padding:15px;
-margin-bottom:15px;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
 }
 
-.msg{
+.bot,.user{
 padding:12px;
-border-radius:14px;
-margin-bottom:10px;
-line-height:1.45;
+margin:10px 0;
+border-radius:12px;
 white-space:pre-line;
 }
 
@@ -103,206 +58,208 @@ background:#dcfce7;
 text-align:right;
 }
 
-.input-row{
+.input-area{
 display:flex;
 gap:10px;
+margin-top:15px;
 }
 
 input{
 flex:1;
 padding:14px;
 border:none;
-border-radius:14px;
+border-radius:12px;
 font-size:16px;
-outline:none;
 }
 
-.small{
-font-size:12px;
-opacity:.8;
-text-align:center;
-margin-top:10px;
+button{
+padding:14px 18px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-weight:bold;
+-webkit-appearance:none;
+appearance:none;
 }
 
-@media(max-width:600px){
-#chatbox{
-height:58vh;
+.lang-box{
+margin-top:15px;
+display:flex;
+gap:10px;
+justify-content:center;
 }
-h1{
-font-size:24px;
+
+.lang-box button{
+background:white;
+color:#111;
 }
+
+.send-btn{
+background:#22c55e;
+color:white;
+}
+
+a{
+color:#0ea5e9;
+font-weight:bold;
+text-decoration:none;
 }
 </style>
 </head>
-
 <body>
 
 <div class="app">
-<div class="card">
 
+<header>
 <h1>Dream Ladders AI</h1>
-<div class="sub">House Cost Estimator</div>
-
-<div class="lang-box">
-<button type="button" class="lang-btn" id="btnEn">English</button>
-<button type="button" class="lang-btn" id="btnTe">తెలుగు</button>
-</div>
+<p>Your Civil Engineer Powered by Smart Logic</p>
+</header>
 
 <div id="chatbox"></div>
 
-<div class="input-row">
+<div class="input-area">
 <input type="text" id="userInput" placeholder="Type here">
-<button type="button" class="primary" id="sendBtn">Send</button>
+<button type="button" class="send-btn" id="sendBtn">Send</button>
 </div>
 
-<div class="small">Powered by Dream Ladders</div>
-
+<div class="lang-box">
+<button type="button" id="btnEn">English</button>
+<button type="button" id="btnTe">తెలుగు</button>
 </div>
+
 </div>
 
 <script>
 let lang = "en";
 let step = 0;
 let data = {};
+let phone = "917093218658";
 
 const chatbox = document.getElementById("chatbox");
 const input = document.getElementById("userInput");
-const sendBtn = document.getElementById("sendBtn");
 
-const text = {
-en:{
-placeholder:"Type here",
-send:"Send",
-questions:[
+const q = {
+en:[
 "Welcome to Dream Ladders AI House Cost Estimator 👷\nGet an instant estimate for your dream home construction.\n\nWhich city are you building in?",
 "What is built-up area in sq ft?",
 "How many floors?",
-"Material type? (standard / premium)",
-"Need interior works also? (yes / no)"
-]
-},
-te:{
-placeholder:"ఇక్కడ టైప్ చేయండి",
-send:"పంపండి",
-questions:[
+"Material type? standard / premium",
+"Need interior also? yes / no"
+],
+te:[
 "Dream Ladders AI House Cost Estimator కు స్వాగతం 👷\nమీ కలల ఇంటి నిర్మాణ ఖర్చు అంచనాను వెంటనే తెలుసుకోండి.\n\nమీరు ఏ నగరంలో నిర్మిస్తున్నారు?",
 "ఇంటి విస్తీర్ణం ఎంత sq ft?",
 "ఎన్ని అంతస్తులు?",
-"మెటీరియల్ టైప్? (standard / premium)",
-"ఇంటీరియర్ పనులు కూడా కావాలా? (yes / no)"
+"మెటీరియల్ టైప్? standard / premium",
+"ఇంటీరియర్ కూడా కావాలా? yes / no"
 ]
-}
 };
 
-function addMsg(msg,type){
-const div = document.createElement("div");
-div.className = "msg " + type;
-div.textContent = msg;
+function add(text,type){
+let div=document.createElement("div");
+div.className=type;
+div.innerText=text;
 chatbox.appendChild(div);
-chatbox.scrollTop = chatbox.scrollHeight;
+chatbox.scrollTop=chatbox.scrollHeight;
+}
+
+function addHtml(html){
+let div=document.createElement("div");
+div.className="bot";
+div.innerHTML=html;
+chatbox.appendChild(div);
+chatbox.scrollTop=chatbox.scrollHeight;
 }
 
 function ask(){
-addMsg(text[lang].questions[step],"bot");
+add(q[lang][step],"bot");
 }
 
-function setLang(selected){
-lang = selected;
-step = 0;
-data = {};
-chatbox.innerHTML = "";
-input.value = "";
-input.placeholder = text[lang].placeholder;
-sendBtn.textContent = text[lang].send;
+function setLang(l){
+lang=l;
+step=0;
+data={};
+chatbox.innerHTML="";
+input.value="";
 ask();
 }
 
-function submitAnswer(){
-const val = input.value.trim();
+function nextStep(){
+
+let val=input.value.trim();
+
 if(!val) return;
 
-addMsg(val,"user");
+add(val,"user");
 
-if(step === 0) data.city = val;
-if(step === 1) data.area = parseFloat(val) || 0;
-if(step === 2) data.floors = parseInt(val) || 1;
-if(step === 3) data.material = val.toLowerCase();
-if(step === 4) data.interior = val.toLowerCase();
+if(step===0) data.city=val;
+if(step===1) data.area=parseFloat(val);
+if(step===2) data.floors=parseInt(val);
+if(step===3) data.material=val.toLowerCase();
+if(step===4) data.interior=val.toLowerCase();
 
-input.value = "";
+input.value="";
 step++;
 
-if(step < text[lang].questions.length){
+if(step < q[lang].length){
 ask();
 }else{
-showResult();
+result();
 }
 }
 
-function showResult(){
+function result(){
 
 let rate = 1900;
 
-if(data.city && data.city.toLowerCase().includes("hyderabad")) rate = 2200;
-if(data.material === "premium") rate += 400;
+if(data.city.toLowerCase().includes("hyderabad")) rate=2200;
+if(data.material==="premium") rate += 400;
 
-const totalArea = data.area * data.floors;
+let totalArea = data.area * data.floors;
 let total = totalArea * rate;
 
-if(data.interior === "yes"){
-total += totalArea * 350;
-}
+if(data.interior==="yes") total += totalArea * 350;
 
-const cement = Math.round(totalArea * 0.45);
-const steel = Math.round(totalArea * 4);
-const sand = (totalArea * 0.03).toFixed(1);
+let cement = Math.round(totalArea * 0.45);
+let steel = Math.round(totalArea * 4);
 
-let result = "";
+if(lang==="en"){
+add(
+`🏠 Total Area: ${totalArea} sq ft
 
-if(lang === "en"){
-result =
-`📍 City: ${data.city}
-🏠 Total Area: ${totalArea} sq ft
 💰 Estimated Cost: ₹${total.toLocaleString("en-IN")}
+
 🧱 Cement Bags: ${cement}
+
 🔩 Steel: ${steel} kg
-🏖 Sand: ${sand} tons
 
-For detailed BOQ contact Dream Ladders.`;
+📞 Click below for detailed quote`,
+"bot");
 }else{
-result =
-`📍 నగరం: ${data.city}
-🏠 మొత్తం విస్తీర్ణం: ${totalArea} sq ft
+add(
+`🏠 మొత్తం విస్తీర్ణం: ${totalArea} sq ft
+
 💰 అంచనా ఖర్చు: ₹${total.toLocaleString("en-IN")}
+
 🧱 సిమెంట్ బ్యాగులు: ${cement}
+
 🔩 స్టీల్: ${steel} kg
-🏖 ఇసుక: ${sand} tons
 
-వివరమైన BOQ కోసం Dream Ladders ను సంప్రదించండి.`;
+📞 వివరమైన కోట్ కోసం కింద క్లిక్ చేయండి`,
+"bot");
 }
 
-addMsg(result,"bot");
+let msg = encodeURIComponent("Hello Dream Ladders, I need detailed estimate for " + totalArea + " sq ft in " + data.city);
 
-step = 0;
-setTimeout(function(){
-ask();
-},800);
+addHtml('<a href="https://wa.me/'+phone+'?text='+msg+'" target="_blank">📱 Contact on WhatsApp</a>');
 }
 
-document.getElementById("btnEn").addEventListener("click",function(){
-setLang("en");
-});
-
-document.getElementById("btnTe").addEventListener("click",function(){
-setLang("te");
-});
-
-sendBtn.addEventListener("click",submitAnswer);
+document.getElementById("btnEn").addEventListener("click",function(){setLang("en");});
+document.getElementById("btnTe").addEventListener("click",function(){setLang("te");});
+document.getElementById("sendBtn").addEventListener("click",nextStep);
 
 input.addEventListener("keydown",function(e){
-if(e.key === "Enter"){
-submitAnswer();
-}
+if(e.key==="Enter") nextStep();
 });
 
 setLang("en");
