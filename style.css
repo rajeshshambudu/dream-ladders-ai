@@ -1,57 +1,80 @@
 body{
-font-family:Arial,sans-serif;
-background:#f2f2f2;
 margin:0;
-padding:0;
+font-family:Arial,sans-serif;
+background:linear-gradient(135deg,#0f172a,#1e293b);
+color:white;
 }
 
-.container{
+.app{
 max-width:700px;
 margin:auto;
 padding:20px;
 }
 
-h1{
+header{
 text-align:center;
-color:#222;
+margin-bottom:20px;
+}
+
+header h1{
+margin:0;
+font-size:34px;
+}
+
+header p{
+opacity:0.8;
 }
 
 #chatbox{
 background:white;
+color:#111;
 height:500px;
 overflow-y:auto;
+border-radius:20px;
 padding:15px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
 }
 
 .bot,.user{
+padding:12px;
 margin:10px 0;
-padding:10px;
-border-radius:8px;
+border-radius:12px;
 }
 
 .bot{
-background:#e8f0ff;
+background:#e0f2fe;
 }
 
 .user{
-background:#d4ffd8;
+background:#dcfce7;
 text-align:right;
 }
 
 .input-area{
 display:flex;
+gap:10px;
 margin-top:15px;
 }
 
 input{
 flex:1;
-padding:12px;
+padding:14px;
+border:none;
+border-radius:12px;
 font-size:16px;
 }
 
 button{
-padding:12px 20px;
+padding:14px 18px;
+border:none;
+border-radius:12px;
 cursor:pointer;
+font-weight:bold;
+}
+
+.lang-box{
+margin-top:15px;
+display:flex;
+gap:10px;
+justify-content:center;
 }
