@@ -8,14 +8,25 @@
 </head>
 <body>
 
-<div class="container">
-    <h1>Dream Ladders Civil Engineer AI</h1>
-    <div id="chatbox"></div>
+<div class="app">
 
-    <div class="input-area">
-        <input type="text" id="userInput" placeholder="Type answer here">
-        <button onclick="nextStep()">Send</button>
-    </div>
+<header>
+<h1>Dream Ladders AI</h1>
+<p>Your Civil Engineer Powered by Smart Logic</p>
+</header>
+
+<div id="chatbox"></div>
+
+<div class="input-area">
+<input type="text" id="userInput" placeholder="Type here">
+<button onclick="nextStep()">Send</button>
+</div>
+
+<div class="lang-box">
+<button onclick="setLang('en')">English</button>
+<button onclick="setLang('te')">తెలుగు</button>
+</div>
+
 </div>
 
 <script src="script.js"></script>
